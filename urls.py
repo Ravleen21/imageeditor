@@ -1,30 +1,26 @@
-from django.urls import path
-from . import views
+"""
+URL configuration for my_project project.
 
-app_name = 'my_app'
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/5.2/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
+
+from django.contrib import admin
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
-    # Home page
-    path('', views.home, name='home'),
-    
-    # Edit an image by its ID
-    path('edit/<int:image_id>/', views.edit_image, name='edit_image'),
-    
-    # Download an image by its ID
-    path('download/<int:image_id>/', views.download_image, name='download_image'),
-    
-    # Upload a new image
-    path('upload/', views.upload_image, name='upload_image'),
-    
-    # Delete an image by its ID
-    path('delete/<int:image_id>/', views.delete_image, name='delete_image'),
-    
-    # Login page
-    path('login/', views.login_view, name='login'),
-    
-    # Signup page
-    path('signup/', views.signup_view, name='signup'),
-    
-    # Logout functionality
-    path('logout/', views.logout_view, name='logout'),
-]
+    path('admin/', admin.site.urls),
+    path('', include('my_app.urls')),  # Include app-level URLs
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
