@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Edit Image</title>
+    <link rel="icon" href="{% static 'favicon.ico' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        img {
+            display: block;
+            margin: 1rem auto;
+            max-width: 300px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            margin: 2rem 0;
+            text-align: center;
+        }
+        form label {
+            display: block;
+            margin: 1rem 0 0.5rem;
+            font-weight: bold;
+        }
+        form input, form select, form button {
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        form button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        form button:hover {
+            background-color: #45a049;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 2rem;
+            text-decoration: none;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Edit Image</h1>
+    </header>
+    <div class="container">
+        <!-- Display Original Image -->
+        <h2>Original Image</h2>
+        <img src="{{ image.original_image.url }}" alt="Original Image">
+        
+        <!-- Display Edited Image if Available -->
+        {% if image.edited_image %}
+            <h2>Edited Image</h2>
+            <img src="{{ image.edited_image.url }}" alt="Edited Image">
+        {% endif %}
+        
+        <!-- Form for Editing Actions -->
+        <form method="post">
+            {% csrf_token %}
+            
+            <!-- Grayscale Button -->
+            <button name="action" value="grayscale">Apply Grayscale</button>
+            
+            <!-- Rotate Options -->
+            <label for="rotate">Rotate:</label>
+            <select name="rotate_angle" id="rotate">
+                <option value="90">90°</option>
+                <option value="180">180°</option>
+                <option value="270">270°</option>
+            </select>
+            <button name="action" value="rotate">Rotate</button>
+            
+            <!-- Resize Options -->
+            <label for="resize">Resize:</label>
+            <input type="number" name="resize_width" placeholder="Width (px)" min="1">
+            <input type="number" name="resize_height" placeholder="Height (px)" min="1">
+            <button name="action" value="resize">Resize</button>
+        </form>
+        
+        <!-- Back to Home Link -->
+        <a href="{% url 'my_app:home' %}" class="back-link">Back to Home</a>
+    </div>
+</body>
+</html>

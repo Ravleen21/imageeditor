@@ -1,0 +1,136 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Image Editor</title>
+    <link rel="icon" href="{% static 'favicon.ico' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            position: relative;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .top-right {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .top-right button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .top-right button:hover {
+            background-color: #45a049;
+        }
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        form button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        form button:hover {
+            background-color: #45a049;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        ul li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        ul li img {
+            max-width: 100px;
+            border-radius: 4px;
+        }
+        ul li a {
+            text-decoration: none;
+            color: #4CAF50;
+            margin-left: 1rem;
+        }
+        ul li a:hover {
+            text-decoration: underline;
+        }
+        .empty-message {
+            text-align: center;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to the Image Editor</h1>
+        <div class="top-right">
+            {% if user.is_authenticated %}
+                <button onclick="window.location.href='{% url 'my_app:logout' %}'">Logout</button>
+            {% else %}
+                <button onclick="window.location.href='{% url 'my_app:login' %}'">Login</button>
+                <button onclick="window.location.href='{% url 'my_app:signup' %}'">Signup</button>
+            {% endif %}
+        </div>
+    </header>
+    <div class="container">
+        <!-- Upload Form -->
+        <h2>Upload an Image</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Upload</button>
+        </form>
+        
+        <!-- Display Uploaded Images -->
+        <h2>Uploaded Images</h2>
+        <ul>
+            {% for image in images %}
+                <li>
+                    <img src="{{ image.original_image.url }}" alt="Image {{ image.id }}">
+                    <div>
+                        <a href="{% url 'my_app:edit_image' image.id %}">Edit</a>
+                        <a href="{% url 'my_app:download_image' image.id %}">Download</a>
+                        <a href="{% url 'my_app:delete_image' image.id %}">Delete</a>
+                    </div>
+                </li>
+            {% empty %}
+                <p class="empty-message">No images uploaded yet.</p>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
